@@ -166,6 +166,15 @@ class AddNewCityViewController: UIViewController {
     }
     
     @objc func selectImage() {
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            self.cityImageView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        }) { _ in
+            UIView.animate(withDuration: 0.1) {
+                self.cityImageView.transform = .identity
+            }
+        }
+        
         let actionSheet = UIAlertController(title: nil,
                                             message: nil,
                                             preferredStyle: .actionSheet)
