@@ -10,8 +10,20 @@ import UIKit
 class CityViewController: UIViewController {
     
     //MARK: - Mock
+    
+    var cities: [City] = [City(name: "Danang", image: UIImage(named: "Danang") ?? UIImage(named: "newCityPlaceholder")!),
+                          City(name: "Bangkok", image: UIImage(named: "Bangkok") ?? UIImage(named: "newCityPlaceholder")!),
+                          City(name: "Almaty", image: UIImage(named: "Almaty") ?? UIImage(named: "newCityPlaceholder")!),
+                          City(name: "Xue", image: UIImage(named: "Xue") ?? UIImage(named: "newCityPlaceholder")!),
+                          City(name: "Danang", image: UIImage(named: "Danang") ?? UIImage(named: "newCityPlaceholder")!),
+                          City(name: "Bangkok", image: UIImage(named: "Bangkok") ?? UIImage(named: "newCityPlaceholder")!),
+                          City(name: "Almaty", image: UIImage(named: "Almaty") ?? UIImage(named: "newCityPlaceholder")!),
+                          City(name: "Xue", image: UIImage(named: "Xue") ?? UIImage(named: "newCityPlaceholder")!)
+                          ]
     var cityName = ["Danang", "Bangkok", "Almaty", "Xue", "Bangkok", "Almaty", "Xue", "Bangkok", "Almaty", "Xue"]
     var imageCity = ["Danang", "Bangkok", "Almaty", "Xue", "Bangkok", "Almaty", "Xue", "Bangkok", "Almaty", "Xue"]
+    
+    private var addCityButton: UIButton!
     
     lazy var cityLabel: UILabel = {
         let label = UILabel()
@@ -26,7 +38,7 @@ class CityViewController: UIViewController {
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 160, height: 165)
-        layout.minimumLineSpacing = 16
+        layout.minimumLineSpacing = 35
         layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 18, right: 16)
         
         
@@ -82,21 +94,21 @@ class CityViewController: UIViewController {
         return stackView
     }()
     
-    lazy var addCityButton: UIButton = {
-        let button = UIButton()
-        button.layer.cornerRadius = 12
-        button.backgroundColor = .orangeL
-        button.setTitle("+ Добавить город", for: .normal)
-        button.setTitleColor(.whiteL, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        button.contentHorizontalAlignment = .center
-        button.contentVerticalAlignment = .center
-        button.addTarget(self, action: #selector(addCityButtonTapped), for: .touchUpInside)
-        
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
-    }()
+//    lazy var addCityButton: UIButton = {
+//        let button = UIButton()
+//        button.layer.cornerRadius = 12
+//        button.backgroundColor = .orangeL
+//        button.setTitle("+ Добавить город", for: .normal)
+//        button.setTitleColor(.whiteL, for: .normal)
+//        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+//        button.contentHorizontalAlignment = .center
+//        button.contentVerticalAlignment = .center
+//        button.addTarget(self, action: #selector(addCityButtonTapped), for: .touchUpInside)
+//        
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        return button
+//    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,7 +117,7 @@ class CityViewController: UIViewController {
     }
     
     private func updateUI() {
-        if cityName.isEmpty && imageCity.isEmpty {
+        if cities.isEmpty {
             placeholderStack.isHidden = false
             collectionView.isHidden = true
         } else {
@@ -115,6 +127,25 @@ class CityViewController: UIViewController {
         }
     }
     
+    private func setupBarItem() {
+        
+        guard let addCityButtonImage = UIImage(named: "plusButton") else {
+            assertionFailure("Failed to load city adding image")
+            return
+        }
+        
+        addCityButton = UIButton.systemButton(with: addCityButtonImage,
+                                              target: self,
+                                              action: #selector(addCityButtonTapped))
+        addCityButton.tintColor = .blackL
+        addCityButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(addCityButton)
+        
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addCityButton)
+    }
+    
+    
     private func showPlaceholder() {
         
     }
@@ -123,6 +154,7 @@ class CityViewController: UIViewController {
         configureView()
         addSubviews()
         setupConstraints()
+        setupBarItem()
     }
     
     private func configureView() {
@@ -130,14 +162,14 @@ class CityViewController: UIViewController {
     }
     
     private func addSubviews() {
-        [cityLabel, placeholderStack, collectionView, addCityButton].forEach{
+        [cityLabel, placeholderStack, collectionView].forEach{
             view.addSubview($0)}
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
         // City Label
-        cityLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        cityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
         cityLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
         
         //Placeholder City ImageView
@@ -152,13 +184,13 @@ class CityViewController: UIViewController {
         collectionView.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 30),
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         
-        //Add City Button
-        addCityButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-        addCityButton.heightAnchor.constraint(equalToConstant: 45),
-        addCityButton.widthAnchor.constraint(equalToConstant: 200),
-        addCityButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+//        //Add City Button
+//        addCityButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+//        addCityButton.heightAnchor.constraint(equalToConstant: 45),
+//        addCityButton.widthAnchor.constraint(equalToConstant: 200),
+//        addCityButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
         
         
@@ -166,7 +198,10 @@ class CityViewController: UIViewController {
     
     //TODO: - добавить город (переход на новый экран)
     @objc private func addCityButtonTapped(_ sender: UIButton) {
-        
+        let addNewCityVC = AddNewCityViewController()
+        addNewCityVC.createDelegate = self
+        let addNewCityNC = UINavigationController(rootViewController: addNewCityVC)
+        present(addNewCityNC, animated: true)
     }
 
 
@@ -175,8 +210,8 @@ class CityViewController: UIViewController {
 
 extension CityViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("Количество элементов: \(cityName.count)")
-        return cityName.count
+        print("Количество элементов: \(cities.count)")
+        return cities.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -184,13 +219,10 @@ extension CityViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        let imageName = imageCity[indexPath.item]
-        let nameName = cityName[indexPath.item]
-        let image = UIImage(named: imageName)
-        print("Загружаем картинку \(imageName): \(image != nil)")
+        let city = cities[indexPath.item]
         
-        cell.imageOfCity.image = image
-        cell.labelOfCity.text = nameName
+        cell.imageOfCity.image = city.image
+        cell.labelOfCity.text = city.name
         
         return cell
     }
@@ -199,6 +231,16 @@ extension CityViewController: UICollectionViewDataSource {
 }
 
 extension CityViewController: UICollectionViewDelegate {
+    
+}
+
+extension CityViewController: CreateCityControllerDelegate {
+    
+    func didCreateCity(_ city: City) {
+        cities.append(city)
+        updateUI()
+    }
+    
     
 }
 

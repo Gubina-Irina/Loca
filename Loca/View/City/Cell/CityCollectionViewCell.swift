@@ -25,8 +25,8 @@ class CityCollectionViewCell: UICollectionViewCell {
     
     lazy var labelOfCity: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        label.textColor = .whiteL
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.textColor = .blackL
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -48,21 +48,20 @@ class CityCollectionViewCell: UICollectionViewCell {
     
     private func addSubviews() {
         contentView.addSubview(imageOfCity)
-        imageOfCity.addSubview(labelOfCity)
+        contentView.addSubview(labelOfCity)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             //Image of city
-            imageOfCity.heightAnchor.constraint(equalToConstant: 160),
-            imageOfCity.widthAnchor.constraint(equalToConstant: 165),
             imageOfCity.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageOfCity.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageOfCity.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageOfCity.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             //Label of city
-            labelOfCity.leadingAnchor.constraint(equalTo: imageOfCity.leadingAnchor, constant: 8),
-            labelOfCity.bottomAnchor.constraint(equalTo: imageOfCity.bottomAnchor, constant: -8),
+            labelOfCity.leadingAnchor.constraint(equalTo: imageOfCity.leadingAnchor),
+            labelOfCity.topAnchor.constraint(equalTo: imageOfCity.bottomAnchor, constant: 7),
             labelOfCity.trailingAnchor.constraint(equalTo: imageOfCity.trailingAnchor, constant: -5)
         ])
     }
