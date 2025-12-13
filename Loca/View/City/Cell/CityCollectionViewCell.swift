@@ -54,14 +54,14 @@ class CityCollectionViewCell: UICollectionViewCell {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             //Image of city
+            imageOfCity.heightAnchor.constraint(equalToConstant: 165),
             imageOfCity.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageOfCity.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageOfCity.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageOfCity.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             //Label of city
             labelOfCity.leadingAnchor.constraint(equalTo: imageOfCity.leadingAnchor),
-            labelOfCity.topAnchor.constraint(equalTo: imageOfCity.bottomAnchor, constant: 7),
+            labelOfCity.topAnchor.constraint(equalTo: imageOfCity.bottomAnchor, constant: 4),
             labelOfCity.trailingAnchor.constraint(equalTo: imageOfCity.trailingAnchor, constant: -5)
         ])
     }

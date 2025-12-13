@@ -37,7 +37,7 @@ class CityViewController: UIViewController {
     
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 160, height: 165)
+        layout.itemSize = CGSize(width: 160, height: 190)
         layout.minimumLineSpacing = 35
         layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 18, right: 16)
         
