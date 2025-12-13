@@ -9,10 +9,13 @@ import UIKit
 
 protocol CreateCityControllerDelegate: AnyObject {
     func didCreateCity(_ city: City)
+    func didEditCity(_ city: City, at indexPath: IndexPath)
 }
 
 class AddNewCityViewController: UIViewController {
-    weak var createDelegate: CreateCityControllerDelegate?
+    weak var delegate: CreateCityControllerDelegate?
+    var editingCity: City?
+    var editingIndexPath: IndexPath?
     
     
     //MARK: - UI Elements
@@ -47,7 +50,7 @@ class AddNewCityViewController: UIViewController {
         let button = UIButton(type: .system)
         button.layer.cornerRadius = 16
         button.backgroundColor = .grayL
-        button.setTitle("Создать", for: .normal)
+        button.setTitle("Сохранить", for: .normal)
         button.setTitleColor(.whiteL, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.contentHorizontalAlignment = .center
@@ -78,10 +81,7 @@ class AddNewCityViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if cityImageView.image == nil {
-            cityImageView.image = .addCityPlaceholder
-        }
-        
+        setupEditingState()
         setupUI()
         cityImageViewTapped()
         updateCreateButtonState()
@@ -91,7 +91,18 @@ class AddNewCityViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectImage))
         cityImageView.isUserInteractionEnabled = true
         cityImageView.addGestureRecognizer(tapGesture)
-
+        
+    }
+    
+    private func setupEditingState() {
+        if cityImageView.image == nil {
+            cityImageView.image = .addCityPlaceholder
+        }
+        
+        if let editingCity {
+            nameCityTextField.text = editingCity.name
+            cityImageView.image = editingCity.image
+        }
     }
     
     private func setupUI() {
@@ -102,7 +113,11 @@ class AddNewCityViewController: UIViewController {
     
     private func configureView() {
         view.backgroundColor = .beigeL
-        title = "Новый город"
+        if let editingCity {
+            title = "Редактировать город"
+        } else {
+            title = "Новый город"
+        }
     }
     
     private func addSubviews() {
@@ -118,24 +133,24 @@ class AddNewCityViewController: UIViewController {
             cityImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             cityImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
             
-        //Name City TextField
+            //Name City TextField
             nameCityTextField.heightAnchor.constraint(equalToConstant: 50),
             nameCityTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             nameCityTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             nameCityTextField.topAnchor.constraint(equalTo: cityImageView.bottomAnchor, constant: 20),
             
-        //Cancel Button
+            //Cancel Button
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
             cancelButton.widthAnchor.constraint(equalToConstant: 166),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-        //Create Button
+            //Create Button
             createButton.heightAnchor.constraint(equalToConstant: 60),
             createButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: 8),
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             createButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-        
+            
         ])
     }
     
@@ -157,7 +172,11 @@ class AddNewCityViewController: UIViewController {
         let newCity = City(name: name,
                            image: image)
         
-        createDelegate?.didCreateCity(newCity)
+        if let index = editingIndexPath {
+            delegate?.didEditCity(newCity, at: index)
+        } else {
+            delegate?.didCreateCity(newCity)
+        }
         dismiss(animated: true)
     }
     
@@ -187,7 +206,7 @@ class AddNewCityViewController: UIViewController {
         let photo = UIAlertAction(title: "Photo",
                                   style: .default) { _ in
             self.chooseImagePicker(source: .photoLibrary)
-       }
+        }
         
         let cancel = UIAlertAction(title: "Cancel",
                                    style: .cancel)
